@@ -20,15 +20,15 @@ or the computer should go first, and a "Try again?" prompt at the end
 
 ----
 
- Welcome to sjbrown's Tic Tac Toe thingy!
- Would you like to go first (you play as o's) or let the computer go
- first (you play as x's)?
-
- type "me" if you would like to go first > _
+    Welcome to sjbrown's Tic Tac Toe thingy!
+    Would you like to go first (you play as o's) or let the computer go
+    first (you play as x's)?
+    
+    type "me" if you would like to go first > _
 
 ----
 
- Current board state:
+    Current board state:
                       1   2   3
                         |   |   
                  A      |   |   
@@ -42,10 +42,10 @@ or the computer should go first, and a "Try again?" prompt at the end
                  C      |   |   
                         |   |   
 
- type the row and column you would like to place your next piece > _
+    type the row and column you would like to place your next piece > _
 
 ----
-
+    
                         |   |   
                       X |   |   
                         |   |   
@@ -58,11 +58,11 @@ or the computer should go first, and a "Try again?" prompt at the end
                         | O | X 
                         |   |   
 
- The computer won!
- Would you like to play again?
-
- type "y" to play again > _
-
+    The computer won!
+    Would you like to play again?
+    
+    type "y" to play again > _
+    
 ----
 
 On the second point:
