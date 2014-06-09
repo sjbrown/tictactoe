@@ -77,5 +77,41 @@ max possible boards is 3^9.  If we store them all in a single file, it would be
 about 172kb. And that would be with lots of superfluous content - board states
 that could never be reached.
 
-So let's see if there's a file online somewhere with all the possible legal
-board states...
+So let's google to see if there's a file online somewhere with all the possible 
+legal board states...
+
+----
+
+June 9
+
+Trying to find a list of all possible board states has come up with nothing.
+
+Interestingly, many of the search results point to Minmax as an algorithm for 
+writing tic-tac-toe. AI.  I am skeptical if it is a good fit.  Tic-tac-toe is
+such a small search space that there would be no sense in a depth limit, and
+the values would all be +infinity, 0, and -infinity...
+
+Anyway...
+
+Ok, so let's reason it out.  What is an illegal board state?
+ * Any state where (# of x's) > (# of o's)
+ * Any state where (# of o's) > (# of x's) + 1
+ * Any state where there is more than one 3-in-a-row
+ * Any state where there is a 3-in-a-row of o's, and (# of o's) == (# of x's)
+
+I think that's comprehensive.  
+Ok, so we could generate all board states with code and prune all of 
+the above... and then what?
+
+After that we would find all the winning and tie states, and then create a 
+directed graph from one state to another.  If there were weighted edges, the
+AI would just lookup what state the board was currently in, and follow the
+edge with the highest value.  Borrowing from Minmax, we could weight the edges
+with 1, 0, and -1.
+
+But if that's the datastructure I'm going to build, it seems silly to
+brute-force all possibilities, and then prune.  I might as well write code
+to build up a tree constrained by legal moves, and when it gets to an endgame
+state (a leaf), it would check the winner or tie, and write that onto it's
+edge.  Now that I think of it, it would be more clear if the weights were
+'x', 0, and 'o', rather than 1, 0, -1.
