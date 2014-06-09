@@ -43,6 +43,11 @@ class Board(object):
 
         self.grid = list(nine_chars)
 
+    def open_spots(self):
+        for i in range(len(self.grid)):
+            if self.grid[i] == ' ':
+                yield i
+
 def calc_winner(board):
     '''Given a board, return the winner.
     returns either 'x', 'o', or None (if no winner)

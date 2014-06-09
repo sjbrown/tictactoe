@@ -54,6 +54,17 @@ class TestBoard(TestCase):
             board.load('xxxoooxxxo') # too many chars
 
 
+    def test_open_spots(self):
+        board = Board()
+        board.load('         ')
+        self.assertEquals( range(9), list(board.open_spots()))
+
+        board.load('xxo   oox')
+        self.assertEquals( [3,4,5], list(board.open_spots()))
+
+        board.load('xxoooxoox')
+        self.assertEquals( [], list(board.open_spots()))
+
     def test_calc_winner(self):
         board = Board()
         board.load('         ')
