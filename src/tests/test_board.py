@@ -57,13 +57,13 @@ class TestBoard(TestCase):
     def test_open_spots(self):
         board = Board()
         board.load('         ')
-        self.assertEquals( range(9), list(board.open_spots()))
+        self.assertEquals( range(9), list(board.open_spots))
 
         board.load('xxo   oox')
-        self.assertEquals( [3,4,5], list(board.open_spots()))
+        self.assertEquals( [3,4,5], list(board.open_spots))
 
         board.load('xxoooxoox')
-        self.assertEquals( [], list(board.open_spots()))
+        self.assertEquals( [], list(board.open_spots))
 
 
     def test_place_piece(self):

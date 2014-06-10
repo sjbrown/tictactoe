@@ -20,6 +20,9 @@ class Board(object):
                      ' ', ' ', ' ',
                     ]
 
+    def __hash__(self):
+        return self.dump().__hash__()
+
     def __getitem__(self, index):
         return self.grid[index]
 
@@ -52,6 +55,24 @@ class Board(object):
         '''load a tic-tac-toe board from a compact string of 9 chars'''
         self.grid = list(nine_chars)
 
+    def dump(self):
+        return ''.join(self.grid)
+
+    def copy(self):
+        b = Board()
+        b.load(self.dump())
+        return b
+
+    @property
+    def next_player(self):
+        exes = [i for i in self.grid if i == 'x']
+        ohs = [i for i in self.grid if i == 'o']
+        if len(ohs) > len(exes):
+            return 'x'
+        else:
+            return 'o'
+
+    @property
     def open_spots(self):
         for i in range(len(self.grid)):
             if self.grid[i] == ' ':
@@ -75,6 +96,13 @@ def calc_winner(board):
                 return letter
 
     return None
+
+def calc_winner_or_tie(board):
+    winner = calc_winner(board)
+    if winner == None and not list(board.open_spots):
+        return 'tie'
+    return winner
+
 
 
 if __name__ == '__main__':
