@@ -115,3 +115,17 @@ to build up a tree constrained by legal moves, and when it gets to an endgame
 state (a leaf), it would check the winner or tie, and write that onto it's
 edge.  Now that I think of it, it would be more clear if the weights were
 'x', 0, and 'o', rather than 1, 0, -1.
+
+----
+
+June 9
+
+Ok, now that I've written a little bit of the graph-manipulating part, I 
+understand the purpose of using the Minmax approach.
+
+It is not sufficient to just identify a board state and say "from here, there
+exists a path to a board state where Player 1 wins", because expert play by
+Player 2 may prevent us from reaching that state.  So we need to annotate the
+edges not with "what states are possible?", but rather, for every edge:
+ * the best result for Player 1 if Player 2 plays perfectly
+ * the best result for Player 2 if Player 1 plays perfectly
