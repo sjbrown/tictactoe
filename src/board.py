@@ -2,10 +2,17 @@
 
 class BoardException(Exception): pass
 
+def validate_after(orig_fn):
+    def new_fn(self, *args, **kwargs):
+        orig_fn(self, *args, **kwargs)
+        self.validate()
+    return new_fn
+
 class Board(object):
     x = 'x'
     o = 'o'
     letters = [x,o]
+    possible_values = [x,o,' ']
 
     def __init__(self):
         self.grid = [' ', ' ', ' ',
@@ -33,20 +40,26 @@ class Board(object):
 '''
         return the_board % tuple(self.grid)
 
-    def load(self, nine_chars):
-        '''load a tic-tac-toe board from a compact string of 9 chars'''
-
-        if len(nine_chars) != 9:
+    def validate(self):
+        '''Some non-comprehensive validation for a Board'''
+        if len(self.grid) != 9:
             raise BoardException('Must be 9 chars')
-        if not set(nine_chars).issubset(set('xo ')):
+        if not set(self.grid).issubset(set(Board.possible_values)):
             raise BoardException("Must be x's, o's and ' ' chars")
 
+    @validate_after
+    def load(self, nine_chars):
+        '''load a tic-tac-toe board from a compact string of 9 chars'''
         self.grid = list(nine_chars)
 
     def open_spots(self):
         for i in range(len(self.grid)):
             if self.grid[i] == ' ':
                 yield i
+
+    @validate_after
+    def place_piece(self, letter, spot):
+        self.grid[spot] = letter
 
 def calc_winner(board):
     '''Given a board, return the winner.

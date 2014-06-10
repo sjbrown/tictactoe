@@ -51,7 +51,7 @@ class TestBoard(TestCase):
         with self.assertRaises(BoardException):
             board.load('xxxoooxxxo') # too many chars
         with self.assertRaises(BoardException):
-            board.load('xxxoooxxxo') # too many chars
+            board.load('Axxoooxxx') # wrong chars
 
 
     def test_open_spots(self):
@@ -64,6 +64,15 @@ class TestBoard(TestCase):
 
         board.load('xxoooxoox')
         self.assertEquals( [], list(board.open_spots()))
+
+
+    def test_place_piece(self):
+        board = Board()
+        board.place_piece('x',0)
+
+        with self.assertRaises(BoardException):
+            board.place_piece('A',0)
+
 
     def test_calc_winner(self):
         board = Board()
