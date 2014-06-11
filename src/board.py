@@ -20,9 +20,6 @@ class Board(object):
                      ' ', ' ', ' ',
                     ]
 
-    def __hash__(self):
-        return self.dump().__hash__()
-
     def __getitem__(self, index):
         return self.grid[index]
 
