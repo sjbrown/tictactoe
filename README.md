@@ -187,3 +187,9 @@ June 11
 
 Merged back into master branch, now to finish Minmax feature of the AI 
 datastructure.
+
+----
+
+June 11
+
+Ok, that works now.  Let's add the user interface.
