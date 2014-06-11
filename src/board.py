@@ -2,6 +2,7 @@
 
 class BoardException(Exception): pass
 
+# A decorator for Board methods
 def validate_after(orig_fn):
     def new_fn(self, *args, **kwargs):
         orig_fn(self, *args, **kwargs)
@@ -102,6 +103,11 @@ def calc_winner(board):
     return None
 
 def calc_winner_or_tie(board):
+    '''Returns:
+       either 'x', 'o', if one of those players has won.
+       'tie' if the game is over and it's a tie game
+       None if the game is not over
+    '''
     winner = calc_winner(board)
     if winner == None and not list(board.open_spots):
         return 'tie'

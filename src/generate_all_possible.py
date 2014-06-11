@@ -8,9 +8,21 @@ from collections import defaultdict
 
 PICKLE_FILENAME = os.path.join(os.path.dirname(__file__), 'ttt.pkl')
 
+# a dict to store memoized Nodes
 memo_dict = {}
 
 class Node(object):
+    '''Nodes represent tic tac toe boards.
+
+    Attributes:
+        children : A Node's children represent all the possible next
+                   tic tac toe boards, based on the current player placing
+                   a piece into one of the board's available spots.
+        minmax_choice : the choice the AI should make based on Minmax.
+        best_x/o_outcome : with a board in this state, the best expected 
+                           outcome for that player. 1 = win, 0 = tie, -1 = loss
+
+    '''
     def __init__(self, board, parent=None):
         self.board = board
         self.children = []

@@ -27,6 +27,7 @@ MOVE_PROMPT = '''\
 
 
 class AI(object):
+    '''Artificial Intelligence'''
     def __init__(self):
         self.root = gap.load_root()
 
@@ -36,6 +37,7 @@ class AI(object):
         return next_node.board
 
 def rowcol_to_spot(rowcol):
+    '''Turn a user input like "a1" or "b2" into an index like 0 or 4'''
     row = rowcol[0]
     col = rowcol[1]
     spot = 0
@@ -71,6 +73,7 @@ def mainloop(ai, initial_board):
 
     choice = raw_input(INTRO_PROMPT)
 
+    # who goes first, cpu or human?
     if choice.lower() == 'me':
         move_fns = cycle([get_human_move, ai.get_move])
     else:
@@ -112,7 +115,7 @@ def main():
     while not stop:
         print ''
         b = board.Board()
-        b.load('         ')
+        b.load('         ') # initialize blank board
         mainloop(ai, b)
         print ''
         should_stop = raw_input(' type "y" to play again > ')
