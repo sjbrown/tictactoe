@@ -156,3 +156,25 @@ then I'll make another git branch.
     >>> datetime.datetime(2014, 6, 11, 10, 38, 50, 960624)
 
 Yup, about 5 minutes.
+
+----
+
+Ok, strategy 1 for optimizing load time: generate everything once, store it
+in a file, and just load that file on startup.
+
+Experiment 1: cPickle
+
+    print now(); cPickle.dump(root, fp, protocol=-1); print now()
+
+    >>> 2014-06-11 11:16:54.713249
+    >>> 2014-06-11 11:17:40.086080
+
+    print now(); foo = cPickle.load(fp); print now()
+
+    >>> 2014-06-11 11:22:53.825928
+    >>> 2014-06-11 11:23:29.868691
+
+The loading measurement (36s) is the really important one.  The dumping
+measurement (46s) only matters for my development workflow. 
+Both seem acceptable, the user interface during play will have to include
+a "Please wait approx 30 seconds while the AI loads..." message.

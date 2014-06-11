@@ -1,7 +1,12 @@
 #! /usr/bin/env python
 
+import os
+import cPickle
+
 from board import Board, calc_winner_or_tie
 from collections import defaultdict
+
+PICKLE_FILENAME = os.path.join(os.path.dirname(__file__), 'ttt.pkl')
 
 memo_dict = {}
 
@@ -42,10 +47,36 @@ class Node(object):
             self.children.append(node)
         self.calc_edges()
 
-def main():
+def load_root():
+    '''Loads the datastructure from a pickle file, 'ttt.pkl'.
+    Takes about 30 seconds.
+    '''
+    fp = file(PICKLE_FILENAME, 'rb')
+    root = cPickle.load(fp)
+    fp.close()
+    return root
+
+def dump_root(root):
+    '''Writes the datastructure to a pickle file, 'ttt.pkl'.
+    Takes about 40 seconds.
+    '''
+    fp = file(PICKLE_FILENAME, 'wb')
+    cPickle.dump(root, fp, protocol=-1)
+    fp.close()
+
+def make_root():
+    '''Creates a datastructure with all possible tic tac toe boards.
+    Takes about 5 minutes
+    '''
     b = Board()
-    print b
-    print list(b.open_spots)
+    b.load('         ')
+    root = Node(b)
+    root.descend()
+    return root
+
+def main():
+    print "Cannot dump from main() because of http://bugs.python.org/issue5509"
+    print "use generate_all_possible_dumper.py instead"
 
 if __name__ == '__main__':
     main()
