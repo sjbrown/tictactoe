@@ -65,10 +65,10 @@ class Node(object):
             board = self.board.copy()
             board.place_piece(board.next_player, spot)
             if board in memo_dict:
-                node = memo_dict[board]
+                node = memo_dict[board.dump()]
             else:
                 node = Node(board, self)
-                memo_dict[board] = node
+                memo_dict[board.dump()]= node
                 node.descend()
             self.children.append(node)
         self.find_best_outcome_paths()
@@ -77,8 +77,9 @@ def load_root():
     '''Loads the datastructure from a pickle file, 'ttt.pkl'.
     Takes about 30 seconds.
     '''
+    global memo_dict
     fp = file(PICKLE_FILENAME, 'rb')
-    root = cPickle.load(fp)
+    root, memo_dict = cPickle.load(fp)
     fp.close()
     return root
 
@@ -87,7 +88,7 @@ def dump_root(root):
     Takes about 40 seconds.
     '''
     fp = file(PICKLE_FILENAME, 'wb')
-    cPickle.dump(root, fp, protocol=-1)
+    cPickle.dump((root, memo_dict), fp, protocol=-1)
     fp.close()
 
 def make_root():
