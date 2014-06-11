@@ -159,6 +159,8 @@ Yup, about 5 minutes.
 
 ----
 
+June 11
+
 Ok, strategy 1 for optimizing load time: generate everything once, store it
 in a file, and just load that file on startup.
 
@@ -178,3 +180,10 @@ The loading measurement (36s) is the really important one.  The dumping
 measurement (46s) only matters for my development workflow. 
 Both seem acceptable, the user interface during play will have to include
 a "Please wait approx 30 seconds while the AI loads..." message.
+
+----
+
+June 11
+
+Merged back into master branch, now to finish Minmax feature of the AI 
+datastructure.

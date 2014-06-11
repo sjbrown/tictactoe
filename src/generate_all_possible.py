@@ -14,26 +14,52 @@ class Node(object):
     def __init__(self, board, parent=None):
         self.board = board
         self.children = []
-        self.edges = []
+        self.minmax_choice = None
         win_or_tie = calc_winner_or_tie(self.board)
         if win_or_tie:
-            self.outcome = set([win_or_tie])
+            if win_or_tie == Board.x:
+                self.best_x_outcome = 1
+                self.best_o_outcome = -1
+            elif win_or_tie == Board.o:
+                self.best_x_outcome = -1
+                self.best_o_outcome = 1
+            else:
+                self.best_x_outcome = 0
+                self.best_o_outcome = 0
         else:
-            self.outcome = set()
+            self.best_x_outcome = None
+            self.best_o_outcome = None
 
     def __eq__(self, other):
         return self.board.grid == other.board.grid
 
     def __repr__(self):
-        return '<Node %s>' % self.board.dump()
+        return '<Node %s %s/%s>' % (self.board.dump(),
+                                    self.best_x_outcome, self.best_o_outcome)
 
-    def calc_edges(self):
+    def find_best_outcome_paths(self):
+        if self.best_x_outcome != None:
+            return
+        if self.board.next_player == Board.x:
+            self.best_x_outcome = max([i.best_x_outcome for i in self.children])
+            self.best_o_outcome = min([i.best_o_outcome for i in self.children])
+        else:
+            self.best_o_outcome = max([i.best_o_outcome for i in self.children])
+            self.best_x_outcome = min([i.best_x_outcome for i in self.children])
+        worst_o_outcome = 1
+        worst_x_outcome = 1
         for child in self.children:
-            self.edges.append((child, child.outcome))
-            self.outcome = self.outcome.union(child.outcome)
+            if self.board.next_player == Board.x:
+                if child.best_o_outcome <= worst_o_outcome:
+                    worst_o_outcome = child.best_o_outcome
+                    self.minmax_choice = child
+            else:
+                if child.best_x_outcome <= worst_x_outcome:
+                    worst_x_outcome = child.best_x_outcome
+                    self.minmax_choice = child
 
     def descend(self):
-        if self.edges:
+        if self.best_x_outcome:
             return # already calculated
         for spot in self.board.open_spots:
             board = self.board.copy()
@@ -45,7 +71,7 @@ class Node(object):
                 memo_dict[board] = node
                 node.descend()
             self.children.append(node)
-        self.calc_edges()
+        self.find_best_outcome_paths()
 
 def load_root():
     '''Loads the datastructure from a pickle file, 'ttt.pkl'.

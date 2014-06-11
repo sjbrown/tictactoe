@@ -20,8 +20,8 @@ class TestNode(TestCase):
         board.load('ooxxxo   ')
         root = Node(board)
 
-        self.assertEquals(root.edges, [])
-        self.assertEquals(root.outcome, set())
+        self.assertEquals(root.children, [])
+        self.assertEquals(root.best_x_outcome, None)
 
     def test_descend(self):
         board = Board()
@@ -42,4 +42,50 @@ class TestNode(TestCase):
         expected = [c1, c2, c3]
 
         self.assertEquals(root.children, expected)
+
+    def test_leaf_nodes(self):
+        b = Board()
+        b.load('ooxxxox  ')
+        root = Node(b)
+
+        root.descend()
+
+        self.assertEquals(root.best_x_outcome, 1)
+        self.assertEquals(root.best_o_outcome, -1)
+        self.assertEquals(root.minmax_choice, None)
+
+        b = Board()
+        b.load('oooxx    ')
+        root = Node(b)
+
+        root.descend()
+
+        self.assertEquals(root.best_x_outcome, -1)
+        self.assertEquals(root.best_o_outcome, 1)
+        self.assertEquals(root.minmax_choice, None)
+
+    def test_minmax(self):
+        # Game with a clear winner
+        b = Board()
+        b.load('oo xx    ')
+        root = Node(b)
+        root.descend()
+
+        self.assertEquals(root.board.next_player, 'o')
+
+        b1 = Board()
+        b1.load('oooxx    ')
+        node1 = Node(b1)
+
+        self.assertEquals(root.minmax_choice, node1)
+
+        # Tie game
+        b = Board()
+        b.load('ooxxxoo  ')
+        root = Node(b)
+        root.descend()
+
+        self.assertEquals(root.board.next_player, 'x')
+        self.assertEquals(root.best_x_outcome, 0)
+        self.assertEquals(root.best_o_outcome, 0)
 
