@@ -193,3 +193,10 @@ datastructure.
 June 11
 
 Ok, that works now.  Let's add the user interface.
+
+----
+
+June 11
+
+Ok, UI now works and is complete.  In my live tests, the computer makes good
+moves and never loses.
