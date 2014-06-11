@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from itertools import cycle
+
 import board
 import generate_all_possible as gap
 
@@ -7,7 +9,7 @@ PLEASE_WAIT = '''\
     Please wait as the Artificial Intelligence loads.
 
     This should take approximately 30 seconds, depending on the speed
-    and available memory of your computer.
+    and available memory of your computer...
 '''
 INTRO = '''\
     Welcome to sjbrown's Tic Tac Toe thingy!
@@ -42,45 +44,80 @@ def rowcol_to_spot(rowcol):
     return spot
 
 def get_human_move(cur_board):
-    print '    Current board state:'
-    print cur_board
-    print ''
-    acceptable_input = False
-    while not acceptable_input:
-        choice = raw_input(MOVE_PROMPT)
-        acceptable_input = ( len(choice) == 2
-                             and choice[0] in 'abc'
-                             and choice[1] in '123')
-    try:
-        cur_board.place_piece(cur_board.next_player, rowcol_to_spot(choice))
-    except:
-        print 'FIX THIS'
+    while True:
+        acceptable_input = False
+        print '    Current board state:'
+        print cur_board
+        print ''
+        while not acceptable_input:
+            choice = raw_input(MOVE_PROMPT)
+            choice = choice.lower()
+            acceptable_input = ( len(choice) == 2
+                                 and choice[0] in 'abc'
+                                 and choice[1] in '123')
+        try:
+            spot = rowcol_to_spot(choice)
+            b = cur_board.place_piece(cur_board.next_player, spot)
+            break
+        except Exception as e:
+            color_message = "\033[1;33m"+ e.message +"\033[0m"
+            print color_message
+            print ''
 
-    return cur_board
+    return b
 
-def main():
-    print PLEASE_WAIT
-    ai = AI()
+def mainloop(ai, initial_board):
+    b = initial_board
 
-    b = board.Board()
-    b.load('         ')
-
-    print INTRO
     choice = raw_input(INTRO_PROMPT)
 
-    if not choice.lower() == 'me':
-        b = ai.get_move(b)
+    if choice.lower() == 'me':
+        move_fns = cycle([get_human_move, ai.get_move])
+    else:
+        move_fns = cycle([ai.get_move, get_human_move])
 
     while board.calc_winner_or_tie(b) == None:
-        b = get_human_move(b)
+        move_fn = move_fns.next()
+        b = move_fn(b)
         print ''
         print b
         print ''
-        if board.calc_winner_or_tie(b) == None:
-            b = ai.get_move(b)
 
+    win_or_tie = board.calc_winner_or_tie(b)
+    if win_or_tie == 'x':
+        winner_msg = 'Winner is Xs!'
+    elif win_or_tie == 'o':
+        winner_msg = 'Winner is Os!'
+    else:
+        winner_msg = 'Tie Game!'
+    print "Game over.", winner_msg
     print b
-    print "DONE"
+    print "Great Game!"
+
+def main():
+    print PLEASE_WAIT
+    try:
+        ai = AI()
+    except IOError as e:
+        print 'The AI file has not been generated yet.'
+        print 'Please run the following command:'
+        print ''
+        print ' python generate_all_possible_dumper.py'
+        print ''
+        return
+
+    print INTRO
+    stop = False
+
+    while not stop:
+        print ''
+        b = board.Board()
+        b.load('         ')
+        mainloop(ai, b)
+        print ''
+        should_stop = raw_input(' type "y" to play again > ')
+        if should_stop.lower() != 'y':
+            stop = True
 
 
 if __name__ == '__main__':

@@ -62,8 +62,7 @@ class Node(object):
         if self.best_x_outcome:
             return # already calculated
         for spot in self.board.open_spots:
-            board = self.board.copy()
-            board.place_piece(board.next_player, spot)
+            board = self.board.place_piece(self.board.next_player, spot)
             if board in memo_dict:
                 node = memo_dict[board.dump()]
             else:
@@ -99,6 +98,7 @@ def make_root():
     b.load('         ')
     root = Node(b)
     root.descend()
+    memo_dict[root.board.dump()] = root
     return root
 
 def main():

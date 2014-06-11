@@ -11,8 +11,9 @@ def validate_after(orig_fn):
 class Board(object):
     x = 'x'
     o = 'o'
+    blank = ' '
     letters = [x,o]
-    possible_values = [x,o,' ']
+    possible_values = [x,o,blank]
 
     def __init__(self):
         self.grid = [' ', ' ', ' ',
@@ -75,9 +76,15 @@ class Board(object):
             if self.grid[i] == ' ':
                 yield i
 
-    @validate_after
     def place_piece(self, letter, spot):
-        self.grid[spot] = letter
+        '''Return a new Board with the piece placed in this spot'''
+        grid_copy = self.grid[:]
+        if grid_copy[spot] != Board.blank:
+            raise BoardException('Spot already taken')
+        grid_copy[spot] = letter
+        b = Board()
+        b.load(''.join(grid_copy))
+        return b
 
 def calc_winner(board):
     '''Given a board, return the winner.
