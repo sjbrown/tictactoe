@@ -129,3 +129,30 @@ Player 2 may prevent us from reaching that state.  So we need to annotate the
 edges not with "what states are possible?", but rather, for every edge:
  * the best result for Player 1 if Player 2 plays perfectly
  * the best result for Player 2 if Player 1 plays perfectly
+
+----
+
+June 11
+
+Back to this project.  It strikes me that I might have another requirement
+to satisfy: reasonable setup time.  I seem to remember that it took ~5 minutes
+to populate the datastructure of all possible games when I was playing around
+with this on Monday, and that's not gonna be a fun experience for the user --
+waiting 5 minutes before they can start playing tic tac toe.
+
+So, while it wasn't explicitly stated in the reqs, I'm gonna go ahead and 
+see about doing that. Meanwhile I'm going to try to be  mindful that scope
+creep is bad for a little exercise like this, and if it takes too long to
+optimize for time, abandon it.  So first I'll measure current performance and
+then I'll make another git branch.
+
+    now = datetime.datetime.now
+    b = board.Board()
+    b.load('         ')
+    root = generate_all_possible.Node(b)
+    now(); root.descend(); now()
+
+    >>> datetime.datetime(2014, 6, 11, 10, 33, 29, 741169)
+    >>> datetime.datetime(2014, 6, 11, 10, 38, 50, 960624)
+
+Yup, about 5 minutes.
